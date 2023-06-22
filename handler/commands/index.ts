@@ -1,11 +1,11 @@
 import { ApplicationCommandOptionData, Client, Interaction, Message } from 'discord.js';
-import * as hello from './hello'
+import * as stats from './stats'
 import * as tiktokezcom from './tiktokez.com'
 import * as instagramezcom from './instagramez.com'
 import * as twitterezcom from './twitterez.com'
 
 export default {
-  hello,
+  stats,
   tiktokezcom,
   instagramezcom,
   twitterezcom,
