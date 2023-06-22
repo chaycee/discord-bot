@@ -60,7 +60,7 @@ export default class {
   handleMessage(action: Interaction | Message, client: Client<boolean>) {
     if ('isCommand' in action)
     if (action.isCommand()) {
-      console.log(action.commandName)
+      console.log(action.commandName, commands[action.commandName]);
       const command = commands[action.commandName];
       if (!command) return;
       command.handler(action, client);
