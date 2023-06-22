@@ -27,6 +27,7 @@ client.on("messageCreate", (msg: Message) => {
 
 client.on("interactionCreate", (interaction: any) => {
   if (!interaction.isCommand()) return;
+  console.log(interaction.commandName)
   commandHandler.handleMessage(interaction, client);
 });
 
