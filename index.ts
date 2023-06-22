@@ -25,4 +25,9 @@ client.on("messageCreate", (msg: Message) => {
   commandHandler.handleMessage(msg, client);
 });
 
+client.on("interactionCreate", (interaction: any) => {
+  if (!interaction.isCommand()) return;
+  commandHandler.handleMessage(interaction, client);
+});
+
 client.login(process.env.discordToken); // token is defined in .env file

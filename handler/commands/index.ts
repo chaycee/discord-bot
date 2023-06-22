@@ -1,4 +1,4 @@
-import { Client, Interaction, Message } from 'discord.js';
+import { ApplicationCommandOptionData, Client, Interaction, Message } from 'discord.js';
 import * as hello from './hello'
 import * as tiktokezcom from './tiktokez.com'
 
@@ -10,12 +10,14 @@ export default {
     command: Command;
     logic: LogicFunction<any, any>;
     handler: HandlerFunction;
+    messageCreateHandler?: MessageCreateHandler;
   };
-}
+};
 
 export interface Command {
   name: string;
   description: string;
+  options?: ApplicationCommandOptionData[];
 }
 
 export type LogicFunction<Response, Options> = (
@@ -23,7 +25,12 @@ export type LogicFunction<Response, Options> = (
   client: Client<boolean>
 ) => Response;
 
-export type HandlerFunction = (
+export type HandlerFunction<settings = any> = (
   interaction: Interaction | Message,
-  client: Client<boolean>
+  client: Client<boolean>,
+  settings?: settings
 ) => void;
+
+export type MessageCreateHandler = {
+  (msg: Message, client: Client<boolean>): void;
+};
