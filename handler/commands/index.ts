@@ -1,14 +1,14 @@
 import { ApplicationCommandOptionData, Client, Interaction, Message } from 'discord.js';
 import * as stats from './stats'
-import * as tiktokezcom from './tiktokez.com'
-import * as instagramezcom from './instagramez.com'
-import * as twitterezcom from './twitterez.com'
+import * as tiktok from './tiktok'
+import * as instagram from "./instagram";
+import * as twitter from "./twitter";
 
 export default {
   stats,
-  tiktokezcom,
-  instagramezcom,
-  twitterezcom,
+  tiktok,
+  instagram,
+  twitter,
 } as {
   [key: string]: {
     command: Command;

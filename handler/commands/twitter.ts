@@ -12,15 +12,15 @@ import {
   MessageCreateHandler,
 } from "./index";
 
-import extractId from "@/utils/extractId";
-import embedezCaller from "@/utils/embedezCaller";
+import extractId from "../../utils/extractId";
+import embedezCaller from "../../utils/embedezCaller";
 
 export const command: Command = {
-  name: "instagram",
-  description: "returns proper link to instagram post",
+  name: "twitter",
+  description: "returns proper link to twitter post",
   options: [
     {
-      description: "instagram link",
+      description: "twitter link",
       name: "link",
       type: ApplicationCommandOptionType.String,
       required: true,
@@ -29,18 +29,16 @@ export const command: Command = {
 };
 
 export const logic: LogicFunction<any, { link: string }> = async (
-  { link = "https://www.instagram.com/p/:id/" },
+  { link = "https://twitter.com/:user/status/:id/" },
   client: Client<boolean>
 ) => {
   const data: any[] = [];
-  data.push(extractId("https://www.instagram.com/p/:id/", link));
-  data.push(extractId("https://www.instagram.com/reel/:id/", link));
-  data.push(extractId("https://www.instagram.com/reels/:id/", link));
+  data.push(extractId("https://twitter.com/:user/status/:id/", link));
 
   const found = data.find((d) => d?.id !== undefined);
   if (!found) return null;
 
-   return data?.find((d) => d?.id !== undefined)?.id || null;
+  return data?.find((d) => d?.id !== undefined)?.id || null;
 };
 
 export const handler: HandlerFunction<boolean> = async (
@@ -49,23 +47,34 @@ export const handler: HandlerFunction<boolean> = async (
   alwaysReply = true
 ) => {
   if (interaction instanceof Message) {
-    const res = await logic({ link: interaction.content }, client);
+    const id = await logic({ link: interaction.content }, client);
 
-    if (!res) {
+    if (!id) {
       if (alwaysReply) return interaction.reply("Please provide a link");
       else return;
     }
 
-    const data = await embedezCaller(res, "instagram");
-    if (typeof data == 'string') return interaction.reply({ content: data });
+    const data = await embedezCaller(id, "twitter");
+    if (typeof data == "string") return interaction.reply({ content: data });
     interaction.reply(data);
   } else {
     if (!interaction.isCommand()) return;
+    interaction.deferReply();
+
     const link = interaction.options.get("link")?.value;
     if (!link || typeof link !== "string")
-      return interaction.reply("Please provide a link");
+      return interaction.editReply("Please provide a link");
 
-    interaction.reply(await logic({ link }, client));
+
+    const id = await logic({ link: link }, client);
+    if (!id) {
+      if (alwaysReply) return interaction.editReply("Please provide a link");
+      else return;
+    }
+
+    const data = await embedezCaller(id, "twitter");
+
+    interaction.editReply(data);
   }
 };
 

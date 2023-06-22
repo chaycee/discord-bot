@@ -1,10 +1,10 @@
-import { ezResponse } from "@/@types";
+import { ezResponse } from "../@types";
 import axios from "axios";
 import { APIEmbed } from "discord.js";
 
 export default async (id: number, type:string) => {
   const ez = await axios.get<ezResponse>(
-    `https://tiktokez.com/api/info/${id}?type=${type}`,
+    `https://${type}ez.com/api/info/${id}?type=${type}`,
     { validateStatus: () => true }
   );
 
@@ -25,7 +25,7 @@ export default async (id: number, type:string) => {
       (() => {
         if (media.type === "photo")
           return {
-            url: `https://tiktokez.com/embed/${id}?type=${type}`,
+            url: `https://${type}ez.com/embed/${id}?type=${type}`,
             image: { url: media.url },
           };
         else return {};
@@ -34,19 +34,19 @@ export default async (id: number, type:string) => {
   }
 
   embeds[0] = {
-    url: `https://tiktokez.com/embed/${id}?type=${type}`,
+    url: `https://${type}ez.com/embed/${id}?type=${type}`,
     title: `${ez.data.user.displayName} (@${ez.data.user.name})`,
     ...embeds[0],
   };
 
   if (embeds.length > 10)
-    embeds[0].description = `Too many photos to show go to https://tiktokez.com/embed/${id}?type=${type} to see them all`;
+    embeds[0].description = `Too many photos to show go to https://${type}ez.com/embed/${id}?type=${type} to see them all`;
 
   return (() => {
       if (isPhoto) return { embeds: embeds.splice(0, 10) };
       else if (hasVideo)
         return {
-          content: `https://tiktokez.com/embed/${id}?type=${type}`,
+          content: `https://${type}ez.com/embed/${id}?type=${type}`,
         };
       else
         return {

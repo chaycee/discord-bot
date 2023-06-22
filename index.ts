@@ -1,9 +1,9 @@
-import 'dotenv/config';
+import "dotenv/config";
 
 // create discord js client instance token = env.discordToken
 
 import { Client, GatewayIntentBits, Message } from "discord.js";
-import CommandHandler from './handler';
+import CommandHandler from "./handler";
 
 const client = new Client({
   intents: [
@@ -14,10 +14,10 @@ const client = new Client({
   ],
 });
 
-const commandHandler = new CommandHandler({client});
+const commandHandler = new CommandHandler({ client });
 
-client.on('ready', () => {
-	console.log(`Logged in as ${client.user?.tag}!`);
+client.on("ready", () => {
+  console.log(`Logged in as ${client.user?.tag}!`);
 });
 
 client.on("messageCreate", (msg: Message) => {
@@ -27,7 +27,7 @@ client.on("messageCreate", (msg: Message) => {
 
 client.on("interactionCreate", (interaction: any) => {
   if (!interaction.isCommand()) return;
-  console.log(interaction.commandName)
+  console.log(interaction.commandName);
   commandHandler.handleMessage(interaction, client);
 });
 

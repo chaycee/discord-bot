@@ -11,8 +11,9 @@ export default class {
 
     this.client.on("ready", () => {
       this.loadCommands();
-      this.watchnew()
     });
+
+    this.watch()
   }
 
   loadCommands() {
@@ -22,9 +23,11 @@ export default class {
       this.commandArray.push(command);
 
       if (messageCreateHandler) {
-        this.client.on("messageCreate", (msg) => {
-          messageCreateHandler(msg, this.client);
-        });
+        if (!process.env.production) {
+          this.client.on("messageCreate", (msg) => {
+            messageCreateHandler(msg, this.client);
+          });
+        }
       }
     });
     if (process.env.production) {
@@ -39,22 +42,21 @@ export default class {
     }
   }
 
-  watchnew() {
-    // if the bot joins a new guild create a messageCreate handler for it
-    this.client.on("guildCreate", (guild) => {
-      console.log("Joined a new guild: " + guild.name);
-      this.commandArray.forEach((command) => {
-        if (command.messageCreateHandler) {
-          guild.client.on("messageCreate", (msg) => {
-            command.messageCreateHandler(msg, this.client);
-          });
-        }
-      });
-    });
+  watch() {
+    this.client.on("messageCreate", (msg: Message) => {
+      if (msg.author.bot) return;
+      
+      const regex = /tiktok|instagram|twitter/g // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      const check = msg.content.match(regex)
 
-    this.client.on("guildDelete", (guild) => {
-      console.log("Left a guild: " + guild.name);
-    });
+      if (check) {
+        Object.keys(commands).forEach((key: any, i) => {
+          const { messageCreateHandler } = commands[key];
+          if (messageCreateHandler) 
+            messageCreateHandler(msg, this.client);
+        });
+      }
+    })
   }
 
   handleMessage(action: Interaction | Message, client: Client<boolean>) {

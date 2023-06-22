@@ -14,7 +14,7 @@ import {
 
 import extractId from "../../utils/extractId";
 import axios from "axios";
-import embedezCaller from "@/utils/embedezCaller";
+import embedezCaller from "../../utils/embedezCaller";
 
 export const command: Command = {
   name: "tiktok",
@@ -83,15 +83,25 @@ export const handler: HandlerFunction<boolean> = async (
     }
 
     const data = await embedezCaller(res, "tiktok");
-    if (typeof data == 'string') return interaction.reply({ content: data });
+    if (typeof data == "string") return interaction.reply({ content: data });
     interaction.reply(data);
   } else {
     if (!interaction.isCommand()) return;
+    interaction.deferReply();
+
     const link = interaction.options.get("link")?.value;
     if (!link || typeof link !== "string")
-      return interaction.reply("Please provide a link");
+      return interaction.editReply("Please provide a link");
 
-    interaction.reply(await logic({ link }, client));
+    const id = await logic({ link: link }, client);
+    if (!id) {
+      if (alwaysReply) return interaction.editReply("Please provide a link");
+      else return;
+    }
+
+    const data = await embedezCaller(id, "tiktok");
+
+    interaction.editReply(data);
   }
 };
 
