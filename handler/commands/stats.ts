@@ -16,5 +16,7 @@ export const handler: HandlerFunction = (
 ) => {
   if (interaction instanceof Message) {
     interaction.channel.send(logic());
+  } else if (interaction.isCommand()) {
+    interaction.reply(logic());
   }
 };
