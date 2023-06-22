@@ -58,6 +58,11 @@ export default class {
   }
 
   handleMessage(action: Interaction | Message, client: Client<boolean>) {
-    //this.commandArray[1].handler(action, client);
+    if ('isCommand' in action)
+    if (action.isCommand()) {
+      const command = commands[action.commandName];
+      if (!command) return;
+      command.handler(action, client);
+    }
   }
 }

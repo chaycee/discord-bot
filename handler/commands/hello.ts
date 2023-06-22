@@ -3,21 +3,18 @@ import { Client, Interaction, Message } from "discord.js";
 import { Command, HandlerFunction, LogicFunction } from "./index";
 
 export const command: Command = {
-  name: "hello",
-  description: "Says hello to the user",
+  name: "stats",
+  description: "simple stats",
 };
 
-export const logic: LogicFunction<string, { user: string}> = ({ user = "unknown" }, client: Client<boolean>) => {
-  return `Hello ${user}!`;
+export const logic = () => {
+  return `https://tiktokez.com/api/landingImage?time=${new Date().getTime()}`;
 };
 
 export const handler: HandlerFunction = (
-  interaction: Interaction | Message,
-  client: Client<boolean>
+  interaction: Interaction | Message
 ) => {
   if (interaction instanceof Message) {
-    interaction.channel.send(
-      logic({ user: interaction.author.username }, client)
-    );
+    interaction.channel.send(logic());
   }
 };
