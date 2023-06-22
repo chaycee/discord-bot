@@ -61,7 +61,7 @@ export default class {
     if ('isCommand' in action)
     if (action.isCommand()) {
       console.log(action.commandName, commands[action.commandName]);
-      const command = this.commandArray.find((c) => c.command.name === action.commandName);
+      const command = commands[action.commandName];
       if (!command) return;
       command.handler(action, client);
     }
